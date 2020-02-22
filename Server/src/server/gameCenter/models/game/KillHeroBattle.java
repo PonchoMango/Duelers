@@ -11,7 +11,7 @@ public class KillHeroBattle extends Game {
     }
 
     public KillHeroBattle(Account account1, Deck deck, GameMap gameMap) {
-        super(account1, deck, "AI", gameMap, GameType.KILL_HERO);
+        super(account1, deck, "The Turk", gameMap, GameType.KILL_HERO);
     }
 
     @Override
