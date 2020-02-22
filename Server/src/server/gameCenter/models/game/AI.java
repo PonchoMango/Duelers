@@ -83,8 +83,8 @@ public class AI {
 
         if (hand.size() < 1) return;
 
-        String handMsg = username + "'s hand: " + actions.printHand();
-        System.out.println(handMsg);
+        //String handMsg = username + "'s hand: " + actions.printHand();
+        //System.out.println(handMsg);
 
         List<Insert> attemptToPlayNCards = pickNRandomElements(hand, new Random().nextInt(hand.size()+1));
         for(Insert insert: attemptToPlayNCards){

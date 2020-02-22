@@ -13,7 +13,6 @@ import java.util.List;
 
 public class AvailableActions {
     private List<Insert> handInserts = new ArrayList<>();
-    private List<Insert> collectibleInserts = new ArrayList<>();
     private List<Attack> attacks = new ArrayList<>();
     private List<Move> moves = new ArrayList<>();
 
@@ -25,7 +24,6 @@ public class AvailableActions {
 
     public void calculateAvailableInsets(Game game) {
         Player ownPlayer = game.getCurrentTurnPlayer();
-        collectibleInserts.clear();
         handInserts.clear();
 
         for (Card card : ownPlayer.getHand()) {
@@ -109,10 +107,6 @@ public class AvailableActions {
 
     public List<Insert> getHandInserts() {
         return Collections.unmodifiableList(handInserts);
-    }
-
-    public List<Insert> getCollectibleInserts() {
-        return Collections.unmodifiableList(collectibleInserts);
     }
 
     public List<Attack> getAttacks() {
