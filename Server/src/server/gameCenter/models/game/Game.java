@@ -41,11 +41,31 @@ public abstract class Game {
     private boolean isFinished;
     private ArrayList<Account> observers = new ArrayList<>();
 
+    private boolean playingVersusAi = false;
+    private AI ai = null;
+
     protected Game(Account account, Deck secondDeck, String userName, GameMap gameMap, GameType gameType) {
         this.gameType = gameType;
         this.gameMap = gameMap;
-        this.playerOne = new Player(account.getMainDeck(), account.getUsername(), 1);
-        this.playerTwo = new Player(secondDeck, userName, 2);
+
+        // choose who is player 1/2.
+        int coinFlip = new Random().nextInt(2);
+        if (coinFlip == 0) {
+            this.playerOne = new Player(account.getMainDeck(), account.getUsername(), 1);
+            this.playerTwo = new Player(secondDeck, userName, 2);
+        }
+        else{
+            this.playerOne = new Player(secondDeck, userName, 1);
+            this.playerTwo = new Player(account.getMainDeck(), account.getUsername(), 2);
+        }
+
+        if (userName == "The Turk"){ // ToDo make "The Turk" a const
+            playingVersusAi = true;
+
+            Player aiPlayer = playerOne.getUserName() == "The Turk" ? playerOne : playerTwo;
+            ai = new AI(userName, this, aiPlayer);
+        }
+
     }
 
     public static int getDefaultReward() {
@@ -62,7 +82,6 @@ public abstract class Game {
 
     public void startGame() {
         playerOne.setCurrentMP(2);
-
         putMinion(1, playerOne.createHero(), gameMap.getCell(2, 0));
 
         this.turnNumber = 2;
@@ -129,9 +148,10 @@ public abstract class Game {
 
                 startTurnTimeLimit();
 
-                if (getCurrentTurnPlayer().getUserName().equals("AI")) {
-                    playCurrentTurnAtRandom();
+                if (playingVersusAi && !(username.equals(ai.getUsername()))){
+                    ai.playCurrentTurnAtRandom();
                 }
+
             } else {
                 throw new ClientException("it isn't your turn!");
             }
@@ -187,81 +207,6 @@ public abstract class Game {
         } else {
             System.out.println("Cannot replace card. Current canReplaceCard value: " + getCurrentTurnPlayer().getCanReplaceCard());
         }
-    }
-
-    private void playCurrentTurnAtRandom() throws LogicException {
-        // AI
-        final int delay = 1000;
-        try {
-            AvailableActions actions = new AvailableActions();
-            actions.calculateAvailableActions(this);
-            while (actions.getMoves().size() > 0) {
-                Move move = actions.getMoves().get(new Random().nextInt(actions.getMoves().size()));
-                moveTroop("AI", move.getTroop().getCard().getCardId(), move.getTargets().get(new Random().nextInt(move.getTargets().size())));
-                Thread.sleep(delay);
-                actions.calculateAvailableMoves(this);
-            }
-            actions.calculateAvailableAttacks(this);
-            while (actions.getAttacks().size() > 0) {
-                Attack attack = actions.getAttacks().get(new Random().nextInt(actions.getAttacks().size()));
-                attack("AI", attack.getAttackerTroop().getCard().getCardId(), attack.getDefenders().get(new Random().nextInt(attack.getDefenders().size())).getCard().getCardId());
-                Thread.sleep(delay);
-                actions.calculateAvailableAttacks(this);
-            }
-            actions.calculateAvailableInsets(this);
-            while (actions.getHandInserts().size() > 0) {
-
-                int currentMana = getCurrentTurnPlayer().getCurrentMP();
-
-                // Pick a playable minion in the hand at random.
-                // By "playable" we simply check available mana relative to minion cost.
-                ArrayList<Card> minionOptions = new ArrayList<Card>();
-                for (Insert i : actions.getHandInserts()) {
-                    if (i.getCard().getManaCost() <= currentMana && i.getCard().getType() == CardType.MINION) {
-                        minionOptions.add(i.getCard());
-                    }
-                }
-
-                if (minionOptions.isEmpty()) {
-                    break;
-                }
-
-                System.out.print("AI PLAYER: minion(s) in Hand = ");
-                minionOptions.forEach((n) -> System.out.print(n.getName() + ", "));
-                System.out.print("\n");
-
-                int idx = new Random().nextInt(Math.max(1, minionOptions.size() - 1));
-                Card minion = minionOptions.get(idx);
-
-                // Skew probability distribution towards favoring squares closer to Hero position.
-                int[] offsets = new int[]{-3, -2, -2, -1, -1, -1, 0, 0, 0, 1, 1, 1, 2, 2, 3};
-                Cell HeroPosition = getCurrentTurnPlayer().getHero().getCell();
-
-                // Attempt (max n tries) to place minion on a random square.
-                for (int attempts = 0; attempts < 20; attempts++) {
-
-                    int x = offsets[new Random().nextInt(offsets.length)];
-                    int y = offsets[new Random().nextInt(offsets.length)];
-
-                    // Get a random square, force it to be within bounds.
-                    int x2 = Math.max(0, Math.min(x + HeroPosition.getRow(), gameMap.getRowNumber()));
-                    int y2 = Math.max(0, Math.min(y + HeroPosition.getColumn(), gameMap.getColumnNumber()));
-
-                    Cell c = new Cell(x2, y2);
-
-                    if (isLegalCellForMinion(c, minion)) {
-                        insert("AI", minion.getCardId(), new Cell(c.getRow(), c.getColumn()));
-                        Thread.sleep(delay);
-                        break;
-                    }
-                }
-                actions.calculateAvailableInsets(this);
-            }
-        } catch (InterruptedException ignored) {
-        } finally {
-            changeTurn("AI");
-        }
-
     }
 
     private void removeFinishedBuffs() {
@@ -445,17 +390,6 @@ public abstract class Game {
         Troop troop = gameMap.getTroop(cardId);
         if (troop == null) {
             throw new ClientException("select a valid card");
-        }
-      
-        if (!troop.canMove()) {
-            throw new ClientException("troop can not move");
-        }
-
-        // TODO: Check if position is under provoke of enemy minion. If yes, raise exception
-        // TODO: Check for Flying. If yes, skip distance check and set cell.
-
-        if (troop.getCell().manhattanDistance(cell) > 2) {
-            throw new ClientException("too far to go");
         }
 
         Cell newCell = gameMap.getCell(cell);
