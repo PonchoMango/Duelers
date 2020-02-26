@@ -5,8 +5,10 @@ import controller.SoundEffectPlayer;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.Bloom;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.Effect;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -18,6 +20,7 @@ import models.comperessedData.CompressedCard;
 import models.comperessedData.CompressedPlayer;
 import models.gui.*;
 import models.message.OnlineGame;
+import server.gameCenter.models.game.Game;
 import view.MainMenu;
 
 import java.beans.PropertyChangeEvent;
@@ -107,6 +110,9 @@ public class HandBox implements PropertyChangeListener {
     }
 
     private void updateCards() {
+
+        CompressedPlayer currentPlayer = GameController.getInstance().getCurrentGame().getCurrentTurnPlayer();
+
         for (int i = 0; i < Constants.MAXIMUM_CARD_HAND_SIZE; i++) {
             final int I = i;
             cards[i].getChildren().clear();
@@ -124,8 +130,6 @@ public class HandBox implements PropertyChangeListener {
             }
 
 
-
-
             if (selectedCard == i && cardAnimation != null) {
                 imageView.setImage(cardBackGlow);
                 cardAnimation.inActive();
@@ -139,7 +143,7 @@ public class HandBox implements PropertyChangeListener {
                         handGroup.getChildren().remove(cardPane);
                         cardPane = null;
                     }
-                    if (battleScene.isMyTurn() && GameController.getInstance().getAvailableActions().canInsertCard(card)) {
+                    if (battleScene.isMyTurn() && GameController.getInstance().getAvailableActions().canInsertCard(card, currentPlayer)) {
                         SoundEffectPlayer.getInstance().playSound(SoundEffectPlayer.SoundName.in_game_hove);
                         cardAnimation.inActive();
                         imageView.setImage(cardBackGlow);
@@ -168,10 +172,25 @@ public class HandBox implements PropertyChangeListener {
                 });
 
                 cards[i].setOnMouseClicked(mouseEvent -> {
-                    if (battleScene.isMyTurn() && GameController.getInstance().getAvailableActions().canInsertCard(card)) {
+                    if (battleScene.isMyTurn() && GameController.getInstance().getAvailableActions().canInsertCard(card, currentPlayer)) {
                         clickOnCard(I);
                     }
                 });
+
+                // Grey out cards in hand when (A) its the opponents turn, (B) cards we cannot player (e.g insufficient mana)
+                if (battleScene.isMyTurn()){
+
+                    if (!GameController.getInstance().getAvailableActions().canInsertCard(card, currentPlayer)){
+                        cards[i].setEffect(DISABLE_BUTTON_EFFECT);
+                    }
+                    else{
+                        // setting effect to null reverts the DISABLE_BUTTON_EFFECT
+                        cards[i].setEffect(null);
+                    }
+                }
+                else{
+                    cards[i].setEffect(DISABLE_BUTTON_EFFECT);
+                }
             }
         }
     }

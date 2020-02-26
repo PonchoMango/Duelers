@@ -139,7 +139,12 @@ public class AvailableActions {
         return Collections.emptyList();
     }
 
-    public boolean canInsertCard(CompressedCard card) {
+    public boolean canInsertCard(CompressedCard card, CompressedPlayer player) {
+
+        if (player.getCurrentMP() < card.getManaCost()){
+            return false;
+        }
+
         return handInserts.stream().map(Insert::getCard).collect(Collectors.toList()).contains(card);
     }
 

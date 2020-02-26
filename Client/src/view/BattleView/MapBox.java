@@ -192,7 +192,7 @@ public class MapBox implements PropertyChangeListener {
         CompressedPlayer player = GameController.getInstance().getCurrentGame().getCurrentTurnPlayer();
         CompressedTroop currentTroop = getTroop(row, column);
         if (selectionType == SelectionType.INSERTION) {
-            if (GameController.getInstance().getAvailableActions().canInsertCard(battleScene.getHandBox().getSelectedCard())) {
+            if (GameController.getInstance().getAvailableActions().canInsertCard(battleScene.getHandBox().getSelectedCard(), player)) {
 
                 CompressedCard card = battleScene.getHandBox().getSelectedCard();
                 if (card.getType() == CardType.MINION || card.getType() == CardType.HERO){
@@ -260,7 +260,7 @@ public class MapBox implements PropertyChangeListener {
                 CompressedTroop currentTroop = getTroop(row, column);
                 if (selectionType == SelectionType.INSERTION) {
                     if (GameController.getInstance().getAvailableActions().canInsertCard(
-                            battleScene.getHandBox().getSelectedCard())) {
+                            battleScene.getHandBox().getSelectedCard(), player)) {
                         if (battleScene.getHandBox().getSelectedCard().getType() == CardType.HERO ||
                                 battleScene.getHandBox().getSelectedCard().getType() == CardType.MINION) {
 
