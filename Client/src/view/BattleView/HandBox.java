@@ -30,7 +30,7 @@ public class HandBox implements PropertyChangeListener {
     private final BattleScene battleScene;
     private final CompressedPlayer player;
     private final Group handGroup;
-    private final Pane[] cards = new Pane[Constants.MAXIMUM_CARD_HAND_SIZE];
+    private final Pane[] cards = new Pane[shared.Constants.MAXIMUM_CARD_HAND_SIZE];
     private final Pane next = new Pane();
     private int selectedCard = -1;
     private CardPane cardPane = null;
@@ -57,7 +57,7 @@ public class HandBox implements PropertyChangeListener {
             hBox.setLayoutY(25 * Constants.SCALE);
             hBox.setSpacing(-15 * Constants.SCALE);
             handGroup.getChildren().add(hBox);
-            for (int i = 0; i < Constants.MAXIMUM_CARD_HAND_SIZE; i++) {
+            for (int i = 0; i < shared.Constants.MAXIMUM_CARD_HAND_SIZE; i++) {
                 cards[i] = new Pane();
                 hBox.getChildren().add(cards[i]);
             }
@@ -91,7 +91,7 @@ public class HandBox implements PropertyChangeListener {
     }
 
     private void updateCards() {
-        for (int i = 0; i < Constants.MAXIMUM_CARD_HAND_SIZE; i++) {
+        for (int i = 0; i < shared.Constants.MAXIMUM_CARD_HAND_SIZE; i++) {
             final int I = i;
             cards[i].getChildren().clear();
             final ImageView imageView = new ImageView();
@@ -317,7 +317,7 @@ public class HandBox implements PropertyChangeListener {
             String cardID = player.getHand().get(selectedCard).getCardId();
             battleScene.getController().replaceCard(cardID);
             int currentTimesReplacedThisTurn = GameController.getInstance().getAvailableActions().getNumTimesReplacedThisTurn();
-            GameController.getInstance().getAvailableActions().setNumTimesReplacedThisTurn( currentTimesReplacedThisTurn + 1 );
+            GameController.getInstance().getAvailableActions().setNumTimesReplacedThisTurn(currentTimesReplacedThisTurn + 1);
             clickOnCard(selectedCard);
             updateNext();
         }

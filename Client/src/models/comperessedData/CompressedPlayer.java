@@ -3,7 +3,6 @@ package models.comperessedData;
 import shared.models.card.CardType;
 import shared.models.card.Card;
 import shared.models.game.Troop;
-import view.BattleView.Constants;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -40,7 +39,7 @@ public class CompressedPlayer {
             support = new PropertyChangeSupport(this);
         }
         support.firePropertyChange("hand", null, null);
-        if (hand.size() > Constants.MAXIMUM_CARD_HAND_SIZE)
+        if (hand.size() > shared.Constants.MAXIMUM_CARD_HAND_SIZE)
             System.out.println("Client Game Error! - current card hand exceeds max card hand size size");
     }
 
