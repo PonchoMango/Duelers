@@ -16,7 +16,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import models.comperessedData.CompressedGame;
-import models.comperessedData.CompressedPlayer;
+import shared.models.CompressedPlayer;
 import models.gui.*;
 
 import java.beans.PropertyChangeEvent;

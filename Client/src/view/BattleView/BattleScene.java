@@ -8,7 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import models.comperessedData.CompressedGame;
-import models.comperessedData.CompressedPlayer;
+import shared.models.CompressedPlayer;
 import models.game.GameActions;
 import shared.models.card.spell.AvailabilityType;
 import shared.models.game.map.Cell;

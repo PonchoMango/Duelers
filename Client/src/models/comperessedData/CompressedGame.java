@@ -1,5 +1,6 @@
 package models.comperessedData;
 
+import shared.models.CompressedPlayer;
 import shared.models.card.CardType;
 import shared.models.card.Card;
 import shared.models.game.Troop;

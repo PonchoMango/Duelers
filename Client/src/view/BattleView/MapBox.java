@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import models.comperessedData.CompressedGameMap;
-import models.comperessedData.CompressedPlayer;
+import shared.models.CompressedPlayer;
 import shared.models.card.CardType;
 import shared.models.card.Card;
 import shared.models.game.Troop;

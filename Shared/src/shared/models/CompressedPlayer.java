@@ -1,4 +1,4 @@
-package models.comperessedData;
+package shared.models;
 
 import shared.models.card.CardType;
 import shared.models.card.Card;
@@ -13,14 +13,24 @@ import java.util.List;
 public class CompressedPlayer {
     private String userName;
     private int currentMP;
-    private List<Card> hand;
-    private List<Card> graveyard;
+    private ArrayList<Card> hand = new ArrayList<>();
+    private ArrayList<Card> graveyard = new ArrayList<>();
     private Card nextCard;
     private int playerNumber;
     private List<Troop> troops;
     private Troop hero;
 
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
+
+    public CompressedPlayer(String userName, int currentMP, List<Card> hand, List<Card> graveyard,
+                            Card nextCard, int playerNumber) {
+        this.userName = userName;
+        this.currentMP = currentMP;
+        this.hand.addAll(hand);
+        this.graveyard.addAll(graveyard);
+        this.nextCard = nextCard;
+        this.playerNumber = playerNumber;
+    }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         if (support == null) {
@@ -64,11 +74,11 @@ public class CompressedPlayer {
         support.firePropertyChange("replace", null, null);
     }
 
-    void addCardToGraveYard(Card card) {
+    public void addCardToGraveYard(Card card) {
         graveyard.add(card);
     }
 
-    void troopUpdate(Troop troop) {
+    public void troopUpdate(Troop troop) {
         if (troops == null)
             troops = new ArrayList<>();
         removeTroop(troop.getCard().getCardId());
@@ -79,7 +89,7 @@ public class CompressedPlayer {
         }
     }
 
-    void removeCardFromHand(String cardId) {
+    public void removeCardFromHand(String cardId) {
         hand.removeIf(card -> card.getCardId().equalsIgnoreCase(cardId));
         if (support == null) {
             support = new PropertyChangeSupport(this);
@@ -95,7 +105,7 @@ public class CompressedPlayer {
         support.firePropertyChange("next", null, null);
     }
 
-    void removeTroop(String cardId) {
+    public void removeTroop(String cardId) {
         if (troops == null)
             troops = new ArrayList<>();
         troops.removeIf(compressedTroop -> compressedTroop.getCard().getCardId().equalsIgnoreCase(cardId));
@@ -138,7 +148,7 @@ public class CompressedPlayer {
         return currentMP;
     }
 
-    void setCurrentMP(int currentMP, int turnNumber) {
+    public void setCurrentMP(int currentMP, int turnNumber) {
         this.currentMP = currentMP;
     }
 

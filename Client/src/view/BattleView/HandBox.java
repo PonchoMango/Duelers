@@ -14,7 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import models.comperessedData.CompressedPlayer;
+import shared.models.CompressedPlayer;
 import models.gui.*;
 import models.message.OnlineGame;
 import shared.models.card.Card;

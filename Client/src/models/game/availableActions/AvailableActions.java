@@ -3,6 +3,7 @@ package models.game.availableActions;
 import controller.GameController;
 import javafx.util.Pair;
 import models.comperessedData.*;
+import shared.models.CompressedPlayer;
 import shared.models.card.AttackType;
 import shared.models.card.Card;
 import shared.models.game.Troop;
