@@ -20,7 +20,7 @@ public class CompressedPlayer {
     private List<Troop> troops;
     private Troop hero;
 
-    private PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private transient PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     public CompressedPlayer(String userName, int currentMP, List<Card> hand, List<Card> graveyard,
                             Card nextCard, int playerNumber) {
