@@ -99,7 +99,7 @@ public class CompressedPlayer {
     void removeTroop(String cardId) {
         if (troops == null)
             troops = new ArrayList<>();
-        troops.removeIf(troop -> troop.getCard().getCardId().equalsIgnoreCase(cardId));
+        troops.removeIf(compressedTroop -> compressedTroop.getCard().getCardId().equalsIgnoreCase(cardId));
         if (hero != null && hero.getCard().getCardId().equalsIgnoreCase(cardId))
             hero = null;
     }
