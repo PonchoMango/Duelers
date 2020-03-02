@@ -26,7 +26,9 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Deploy
-        run: cd docs && npm ci  && npm run deploy -- -r https://${{ secrets.GH_PAGES_DEPLOYMENT_TOKEN }}@github.com/Duelers/Duelers.git
+        env:
+          DEPLOY_KEY: ${{ secrets.GH_PAGES_DEPLOYMENT_TOKEN }}
+        run: cd docs && npm ci  && npm run deploy -- -r https://${DEPLOY_KEY}@github.com/Duelers/Duelers.git
       # - name: Deploy
       #   uses: peaceiris/actions-gh-pages@v3
       #   with:
