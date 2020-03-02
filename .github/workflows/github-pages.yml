@@ -25,14 +25,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      - name: Build
+        run: |
+          cd docs
+          npm ci
+          npm run build
+
       - name: Deploy
-        env:
-          DEPLOY_KEY: ${{ secrets.GH_PAGES_DEPLOYMENT_TOKEN }}
-        run: cd docs && npm ci  && npm run deploy -- -r https://${DEPLOY_KEY}@github.com/Duelers/Duelers.git
-      # - name: Deploy
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GH_PAGES_DEPLOYMENT_TOKEN }}
-      #     publish_dir: ./docs/public
-      #     user_name: Project CardBoard Automation
-      #     user_email: dueylst2@protonmail.com
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_PAGES_DEPLOYMENT_TOKEN }}
+          publish_dir: ./docs/public
+          user_name: Project CardBoard Automation
+          user_email: dueylst2@protonmail.com
