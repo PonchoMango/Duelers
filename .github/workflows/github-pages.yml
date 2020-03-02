@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - deploy-content
 
 jobs:
   deploy:
@@ -11,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Environment
+      - name: Setup node
         uses: actions/setup-node@v1
         with:
           node-version: "12.x"
@@ -23,4 +24,19 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - run: cd docs && npm ci && npm run deploy
+
+      #       - name: Git setup
+      #         run: |
+      #           git config --global user.email "duelyst2@protonmail.com"
+      #           git config --global user.name "Project CardBoard Automation"
+      # ${{ secrets.GH_PAGES_DEPLOYMENT_TOKEN }}
+      #       - name: Deploy
+      #         run: cd docs && npm ci && npm run deploy
+      - name: Build
+        run: cd docs && npm ci  && npm run build -- --prefix-paths
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_PAGES_DEPLOYMENT_TOKEN }}
+          publish_dir: ./public
