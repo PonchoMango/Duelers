@@ -19,4 +19,4 @@ git commit -m "Added new getting started documentation."
 git push -u origin my-changes
 ```
 
-Then open a PR from `my-changes` to `master`. Once your PR is merged, the docs site will automatically deploy to https://duelers.github.io/Duelers.
+Then open a PR from `my-changes` to `master`. Once your PR is merged, the docs site will automatically deploy to https://duelers.github.io/Duelers/.
